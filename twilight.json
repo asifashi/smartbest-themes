@@ -1,11 +1,11 @@
 {
   "type": "react",
   "name": {
-    "ar": "smartbest theme",
-    "en": "smartbest theme"
+    "ar": "ثيم سمارت بست",
+    "en": "Smartbest Theme"
   },
-  "repository": "https://github.com/SallaApp/theme-raed",
-  "author_email": "support@salla.sa",
+  "repository": "https://github.com/asifashi/smartbest-themes",
+  "author_email": "asif@smartbest.co",
   "features": [
     "mega-menu",
     "fonts",

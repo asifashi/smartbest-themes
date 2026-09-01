@@ -1,0 +1,20 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "./app.scss";
+
+/* RTL-specific font */
+[dir="rtl"] {
+  --font-main: var(--font-ar);
+}
+
+/* Apply fonts from Salla SDK if available */
+body {
+  font-family: var(--font-main);
+}
+
+/* Prevent layout shift when modal/drawer opens — scrollbar stays visible */
+body.menu-opened {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}

@@ -1,0 +1,19 @@
+{
+  "pages.cart.total": "Total",
+  "pages.cart.empty": "Your cart is empty",
+  "pages.cart.continue_shopping": "Continue Shopping",
+  "pages.products.add_to_cart": "Add to Cart",
+  "pages.products.out_of_stock": "Out of Stock",
+  "common.actions.save": "Save",
+  "common.actions.cancel": "Cancel",
+  "pages.thank_you.hero_title": "Thank you for shopping with us! 😊",
+  "pages.thank_you.description": "Your order has been received and will be reviewed and confirmed shortly.",
+  "pages.thank_you.view_order_details": "View Order Details",
+  "pages.thank_you.order_id_label": "Order ID",
+  "pages.thank_you.email_sent_to": "Email sent to",
+  "pages.thank_you.resend_invoice": "Resend invoice email",
+  "pages.thank_you.send": "Send",
+  "pages.thank_you.support": "Support",
+  "pages.thank_you.invoice_sent_success": "Invoice sent successfully",
+  "common.titles.home": "Home"
+}

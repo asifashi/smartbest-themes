@@ -4,3 +4,5 @@ export { EnhancedSlider } from './EnhancedSlider';
 export { MainLinks } from './MainLinks';
 export { SliderProductsWithHeader } from './SliderProductsWithHeader';
 export { EnhancedSquareBanners } from './EnhancedSquareBanners';
+export { NoonProductGrid } from './NoonProductGrid';
+export { NoonCategoryStrip } from './NoonCategoryStrip';

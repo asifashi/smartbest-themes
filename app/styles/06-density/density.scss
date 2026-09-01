@@ -1,0 +1,256 @@
+/* ==========================================================================
+   DENSITY LAYER  —  "zoom out" pass, noon-style information density
+   --------------------------------------------------------------------------
+   Salla's stock theme is deliberately "zoomed in": 1280px canvas, 290px
+   product cards, a 12/5 hero (≈790px tall on a 1900px screen) and generous
+   vertical rhythm. noon does the opposite — wide canvas, small cards, many
+   per row, tight spacing — so far more of the catalogue is visible at once.
+
+   Every selector below was verified against the RENDERED DOM of this theme
+   (localhost:5173) and the twilight-theme-engine dist, not assumed.
+
+   Loaded last from app.scss so it wins the cascade. Delete that one @import
+   to revert the whole pass. Colours and branding are untouched.
+   ========================================================================== */
+
+:root {
+  --d-card-min:   190px;  /* product card min width; stock ≈290px */
+  --d-grid-gap:    10px;  /* stock 24–32px                        */
+  --d-block-gap:   20px;  /* space between home blocks            */
+  --d-hero-ratio:  3/1;   /* stock 12/5 (=2.4/1) → much shorter    */
+}
+
+/* --------------------------------------------------------------------------
+   1. Canvas — the single biggest lever.
+   -------------------------------------------------------------------------- */
+.container {
+  max-width: 1600px !important;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+@media (min-width: 1600px) {
+  .container { padding-left: 16px; padding-right: 16px; }
+}
+
+/* --------------------------------------------------------------------------
+   2. HERO — the component sets style={{aspectRatio:'12/5'}} inline on each
+      slide, so this needs !important to win. 12/5 on a 1900px screen is
+      ~790px tall; 3/1 brings it to ~630px, and the min-height cap stops it
+      dominating tall screens.
+   -------------------------------------------------------------------------- */
+.s-block--enhanced-slider .swiper-slide {
+  aspect-ratio: var(--d-hero-ratio) !important;
+  max-height: 420px !important;
+}
+.s-block--enhanced-slider .home-slider__content { padding-bottom: 0 !important; }
+
+/* --------------------------------------------------------------------------
+   3. Product grid — small cards, many per row.
+      s-products-list-wrapper is the engine's grid container.
+   -------------------------------------------------------------------------- */
+.s-products-list-wrapper,
+.grid-cols-auto-fill {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(var(--d-card-min), 1fr)) !important;
+  gap: var(--d-grid-gap) !important;
+}
+
+.s-product-card-content        { padding: 8px !important; }
+.s-product-card-content-title  { font-size: 0.8125rem; line-height: 1.25rem; }
+.s-product-card-content-title a { -webkit-line-clamp: 2; }
+.s-product-card-content-sub-title { font-size: 0.6875rem; }
+.s-product-card-entry          { border-radius: 6px; }
+
+/* --------------------------------------------------------------------------
+   4. Category strip — stock shows 6 per row, noon shows ~11.
+   -------------------------------------------------------------------------- */
+salla-slider .slide--one-sixth,
+.s-block--main-links .swiper-slide {
+  width: 33.333% !important;
+}
+@media (min-width: 640px)  { salla-slider .slide--one-sixth, .s-block--main-links .swiper-slide { width: 20%   !important; } }
+@media (min-width: 768px)  { salla-slider .slide--one-sixth, .s-block--main-links .swiper-slide { width: 12.5% !important; } }
+@media (min-width: 1024px) { salla-slider .slide--one-sixth, .s-block--main-links .swiper-slide { width: 9.09% !important; } }
+
+.slide--cat-entry img { width: 56px !important; height: 56px !important; }
+.slide--cat-entry h2  { font-size: 0.75rem; line-height: 1rem; }
+
+/* --------------------------------------------------------------------------
+   5. Vertical rhythm — tighten gaps between home blocks.
+   -------------------------------------------------------------------------- */
+.s-block          { margin-top: var(--d-block-gap) !important; }
+.s-block__title   { margin-bottom: 10px !important; }
+.s-block__title h2 { font-size: 1rem !important; }
+
+/* ==========================================================================
+   NOON GRID — the dense product grid that replaces Salla's carousels.
+   Rendered by app/components/home/NoonProductGrid.tsx
+   ========================================================================== */
+
+.noon-grid {
+  display: grid;
+  /* Cards are CAPPED, not stretched. With `1fr` a section holding 4 products
+     on a 7-column grid leaves 3 empty columns - which in RTL pushes the row
+     to one side and reads as broken. A fixed max keeps cards card-sized and
+     `justify-content: start` packs them from the edge, so a short section
+     looks deliberate and a long one fills the row. */
+  grid-template-columns: repeat(auto-fill, minmax(165px, 200px));
+  justify-content: start;
+  gap: 8px;
+  align-items: stretch;
+}
+
+/* Cards sit flush and tight — noon uses hairline separation, not big shadows */
+.noon-grid .s-product-card-entry {
+  border: 1px solid #ececec;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+  height: 100%;
+}
+.noon-grid .s-product-card-content       { padding: 8px !important; }
+.noon-grid .s-product-card-content-title { font-size: 0.8125rem; line-height: 1.15rem; }
+.noon-grid .s-product-card-image         { aspect-ratio: 1 / 1; object-fit: contain; }
+
+/* Section header */
+.noon-grid__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 22px 0 10px;
+}
+.noon-grid__title { font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
+.noon-grid__desc  { font-size: 0.8125rem; opacity: 0.65; margin-top: 2px; }
+.noon-grid__all {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-primary, #1a1a1a);
+  white-space: nowrap;
+}
+.noon-grid__all:hover { text-decoration: underline; }
+
+/* Loading placeholders keep the grid from collapsing */
+.noon-grid__skeleton {
+  aspect-ratio: 3 / 4;
+  border-radius: 6px;
+  background: #f2f2f2;
+  animation: noonPulse 1.4s ease-in-out infinite;
+}
+@keyframes noonPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+
+/* --------------------------------------------------------------------------
+   PAGE RHYTHM — the stock theme spends 4,881px of scroll on 10 sections.
+   These are the three worst offenders, measured in the browser.
+   -------------------------------------------------------------------------- */
+
+/* Store features: three full-height cards for three one-line facts.
+   noon runs these as a thin trust strip. 184px -> ~72px. */
+.s-block--store-features .s-block--features__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px !important;
+  text-align: start;
+}
+.s-block--store-features .s-block--features__item i,
+.s-block--store-features .s-block--features__item svg,
+.s-block--store-features .s-block--features__item img {
+  width: 32px !important;
+  height: 32px !important;
+  flex: 0 0 auto;
+  margin: 0 !important;
+}
+.s-block--store-features h3 { font-size: 0.8125rem; margin: 0; }
+.s-block--store-features p  { font-size: 0.75rem; opacity: 0.65; margin: 0; }
+
+/* Category strip: big white cards -> compact tiles */
+.s-block--main-links .slide--cat-entry {
+  padding: 8px 4px !important;
+}
+
+/* Global vertical rhythm */
+.s-block { margin-top: 16px !important; }
+
+/* ==========================================================================
+   NOON CATEGORY STRIP — app/components/home/NoonCategoryStrip.tsx
+   Compact circular tiles, ~11 across, instead of 6 large cards + arrows.
+   ========================================================================== */
+
+.noon-cats__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 18px 0 10px;
+}
+
+.noon-cats {
+  display: grid;
+  /* auto-FIT + 1fr stretched 7 tiles across 1600px (~228px each), which
+     looked spread out rather than dense. Capping the tile and centring the
+     row keeps them tile-sized however many there are. */
+  grid-template-columns: repeat(auto-fit, minmax(84px, 104px));
+  justify-content: center;
+  gap: 4px;
+}
+
+.noon-cats__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 4px;
+  border-radius: 8px;
+  text-align: center;
+  transition: background-color 0.18s ease;
+}
+.noon-cats__item:hover { background: #f5f5f7; }
+
+.noon-cats__thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.noon-cats__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.noon-cats__thumb i {
+  font-size: 22px;
+  line-height: 1;
+  color: var(--color-primary, #1a1a1a);
+}
+
+.noon-cats__label {
+  font-size: 0.72rem;
+  line-height: 1.15;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Phones: horizontal scroll rather than a cramped grid */
+@media (max-width: 640px) {
+  .noon-cats {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .noon-cats::-webkit-scrollbar { display: none; }
+  .noon-cats__item { flex: 0 0 78px; scroll-snap-align: start; }
+}

@@ -7,3 +7,8 @@ dist/
 stats.html
 coverage/
 tsconfig.tsbuildinfo
+
+# Local dev tooling (Playwright inspection scripts, launchers, screenshots)
+*.mjs
+*.bat
+shot-*.png

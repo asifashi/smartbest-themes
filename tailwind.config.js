@@ -13,9 +13,11 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: '10px',
+      padding: '12px',
       screens: {
-        '2xl': '1280px',
+        // DENSITY: noon-style wide canvas. Stock is 1280px, which is the main
+        // reason Salla themes read as "zoomed in".
+        '2xl': '1600px',
       },
     },
     fontFamily: {
@@ -27,7 +29,9 @@ module.exports = {
         elastic: 'cubic-bezier(0.55, 0, 0.1, 1)',
       },
       gridTemplateColumns: {
-        'auto-fill': 'repeat(auto-fill, 290px)',
+        // DENSITY: 290px -> 190px. noon fits ~7-8 cards per row on desktop;
+        // the stock 290px fits about 4.
+        'auto-fill': 'repeat(auto-fill, minmax(190px, 1fr))',
       },
       colors: {
         dark: '#1D1F1F',

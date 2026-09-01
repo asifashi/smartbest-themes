@@ -87,3 +87,7 @@
 @import './05-utilities/swal';
 @import './05-utilities/safari-fixes';
 @import './05-utilities/font-customization';
+
+/* DENSITY LAYER - loaded last so it wins the cascade.
+   Remove this one line to revert the whole noon-style density pass. */
+@import './06-density/density';

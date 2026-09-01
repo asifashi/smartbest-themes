@@ -52,7 +52,10 @@ export const EnhancedSlider = memo(function EnhancedSlider({ data }: EnhancedSli
             <div
               key={index}
               className="swiper-slide w-full bg-dark relative"
-              style={{ aspectRatio: '12/5' }}
+              // DENSITY: stock is 12/5 (=2.4:1), which is ~790px tall on a 1900px
+              // screen and eats the whole first screen. noon's hero is wide and
+              // short. 32/9 (=3.55:1) plus a hard cap keeps it to a banner.
+              style={{ aspectRatio: '32/9', maxHeight: '380px' }}
             >
               <div
                 style={{ backgroundImage: `url(${slide.image})` }}

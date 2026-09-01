@@ -15,5 +15,17 @@
   "pages.thank_you.send": "إرسال",
   "pages.thank_you.support": "الدعم",
   "pages.thank_you.invoice_sent_success": "تم إرسال الفاتورة بنجاح",
-  "common.titles.home": "الرئيسية"
+  "common.titles.home": "الرئيسية",
+  "blocks.header.search_placeholder": "ابحث عن منتج، ماركة، أو فئة",
+  "blocks.header.main_menu": "القائمة الرئيسية",
+  "blocks.header.no_notifications": "لا توجد إشعارات",
+  "blocks.header.offers": "العروض",
+  "blocks": {
+    "header": {
+      "search_placeholder": "ابحث عن منتج، ماركة، أو فئة",
+      "main_menu": "القائمة الرئيسية",
+      "no_notifications": "لا توجد إشعارات",
+      "offers": "العروض"
+    }
+  }
 }

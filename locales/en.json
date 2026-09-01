@@ -15,5 +15,17 @@
   "pages.thank_you.send": "Send",
   "pages.thank_you.support": "Support",
   "pages.thank_you.invoice_sent_success": "Invoice sent successfully",
-  "common.titles.home": "Home"
+  "common.titles.home": "Home",
+  "blocks.header.search_placeholder": "Search for a product, brand or category",
+  "blocks.header.main_menu": "Main menu",
+  "blocks.header.no_notifications": "No notifications",
+  "blocks.header.offers": "Offers",
+  "blocks": {
+    "header": {
+      "search_placeholder": "Search for a product, brand or category",
+      "main_menu": "Main menu",
+      "no_notifications": "No notifications",
+      "offers": "Offers"
+    }
+  }
 }

@@ -3,6 +3,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { product, type ProductsListSource } from '@salla.sa/twilight-theme-engine/api/product';
 import { ProductCard } from '@salla.sa/twilight-theme-engine/product';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
+import { DealCountdown } from './DealCountdown';
 
 /**
  * NoonProductGrid
@@ -69,18 +70,35 @@ function GridBody({
   const items: Product[] = (data?.items ?? []).slice(0, limit);
   if (!items.length) return null;
 
+  // Drive the countdown off real data: the EARLIEST offer to expire in this
+  // section. No time-limited product -> no timer, so non-sale rows stay clean.
+  const soonest = items
+    .map((p) => p.discount_ends)
+    .filter((d): d is string => typeof d === 'string' && d.length > 0)
+    .map((d) => ({ raw: d, ms: new Date(d).getTime() }))
+    .filter((d) => Number.isFinite(d.ms) && d.ms > Date.now())
+    .sort((a, b) => a.ms - b.ms)[0];
+
   return (
-    <div className="noon-grid">
-      {items.map((p, i) => (
-        <ProductCard
-          key={p.id}
-          product={p}
-          layout="vertical"
-          withShadow={false}
-          imagePriority={i < 8}
-        />
-      ))}
-    </div>
+    <>
+      {soonest && (
+        <div className="noon-grid__deal">
+          <span className="noon-grid__deal-label">{'ينتهي خلال'}</span>
+          <DealCountdown endsAt={soonest.raw} />
+        </div>
+      )}
+      <div className="noon-grid">
+        {items.map((p, i) => (
+          <ProductCard
+            key={p.id}
+            product={p}
+            layout="vertical"
+            withShadow={false}
+            imagePriority={i < 8}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 

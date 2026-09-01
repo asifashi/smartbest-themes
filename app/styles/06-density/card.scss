@@ -1,0 +1,233 @@
+/* ==========================================================================
+   PREMIUM PRODUCT CARD
+   --------------------------------------------------------------------------
+   Restyles the engine's ProductCard rather than replacing it, so add-to-cart,
+   wishlist, option handling and out-of-stock states keep working. Every
+   selector below was read off the RENDERED card in a headless browser:
+
+     .s-product-card
+       .s-product-card-image  ( > a, .s-product-card-wishlist-btn )
+       .s-product-card-content
+         .s-product-card-content-main   ( .s-product-card-content-title )
+         .s-product-card-content-sub    ( .s-product-card-starting-price )
+         .s-product-card-content-footer ( add-to-cart button )
+   ========================================================================== */
+
+:root {
+  --card-radius: 10px;
+  --card-border: #eceef1;
+  --card-ink: #16181d;
+  --card-muted: #6b7280;
+  --card-sale: #c8102e;
+}
+
+/* ---- shell -------------------------------------------------------------- */
+.noon-grid .s-product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  transition:
+    box-shadow 0.22s ease,
+    transform 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.noon-grid .s-product-card:hover {
+  border-color: #dfe3e8;
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ---- image -------------------------------------------------------------- */
+.noon-grid .s-product-card-image {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #fafafa;
+  overflow: hidden;
+}
+.noon-grid .s-product-card-image img,
+.noon-grid .s-product-card-image a {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.noon-grid .s-product-card-image img {
+  object-fit: contain;
+  padding: 8px;
+  transition: transform 0.35s ease;
+}
+.noon-grid .s-product-card:hover .s-product-card-image img {
+  transform: scale(1.04);
+}
+
+/* Wishlist: quiet until hover, never covering the product */
+.noon-grid .s-product-card-wishlist-btn {
+  position: absolute;
+  top: 6px;
+  inset-inline-end: 6px;
+  z-index: 2;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+.noon-grid .s-product-card:hover .s-product-card-wishlist-btn { opacity: 1; }
+.noon-grid .s-product-card-wishlist-btn .s-button-element {
+  width: 30px;
+  height: 30px;
+  min-width: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.08);
+}
+.noon-grid .s-product-card-wishlist-btn i { font-size: 14px; }
+
+/* Promotion ribbon (rendered by the engine when a promo title exists) */
+.noon-grid .promotion-title {
+  top: 6px !important;
+  inset-inline-start: 0 !important;
+  font-size: 0.625rem !important;
+  font-weight: 700;
+  padding: 3px 8px !important;
+  background: var(--card-sale) !important;
+  border-radius: 0 !important;
+  border-start-end-radius: 4px !important;
+  border-end-end-radius: 4px !important;
+  letter-spacing: 0.02em;
+}
+
+/* ---- content ------------------------------------------------------------ */
+.noon-grid .s-product-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 5px;
+  padding: 9px 10px 10px !important;
+}
+
+.noon-grid .s-product-card-content-title {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.2rem;
+  font-weight: 500;
+  color: var(--card-ink);
+}
+.noon-grid .s-product-card-content-title a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4rem;
+}
+.noon-grid .s-product-card-content-title a:hover { color: var(--color-primary); }
+
+/* Price block — the loudest thing on the card */
+.noon-grid .s-product-card-content-sub {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+}
+.noon-grid .s-product-card-starting-price,
+.noon-grid .s-product-card-price {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--card-ink);
+  letter-spacing: -0.01em;
+}
+.noon-grid .s-product-card-full-price {
+  font-size: 0.75rem;
+  color: var(--card-muted);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+/* ---- footer / add to cart ---------------------------------------------- */
+.noon-grid .s-product-card-content-footer { margin-top: 8px; }
+
+.noon-grid .s-product-card-content-footer .s-button-element {
+  width: 100%;
+  height: 34px;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* Out of stock reads as unavailable, not as an error */
+.noon-grid .s-product-card-out-of-stock .s-product-card-image img {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+.noon-grid .s-product-card-out-of-stock .s-button-element {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+}
+
+/* ---- small screens ------------------------------------------------------ */
+@media (max-width: 480px) {
+  .noon-grid .s-product-card-content { padding: 8px !important; }
+  .noon-grid .s-product-card-content-title { font-size: 0.75rem; }
+  .noon-grid .s-product-card-starting-price { font-size: 0.875rem; }
+}
+
+/* ==========================================================================
+   DEAL COUNTDOWN — app/components/home/DealCountdown.tsx
+   Shown only when a section actually contains a time-limited offer.
+   ========================================================================== */
+
+.noon-grid__deal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(200, 16, 46, 0.08), rgba(200, 16, 46, 0));
+  border: 1px solid rgba(200, 16, 46, 0.16);
+  width: fit-content;
+}
+
+.noon-grid__deal-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--card-sale);
+  letter-spacing: 0.01em;
+}
+
+.deal-countdown {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  direction: ltr;
+}
+
+.deal-countdown__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 30px;
+  padding: 3px 5px;
+  border-radius: 5px;
+  background: var(--card-sale);
+  color: #fff;
+  line-height: 1;
+}
+
+.deal-countdown__num {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.deal-countdown__unit {
+  font-size: 0.5rem;
+  opacity: 0.85;
+  margin-top: 2px;
+}

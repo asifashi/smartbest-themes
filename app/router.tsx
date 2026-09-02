@@ -11,9 +11,9 @@ import {
   Brands,
   CustomTestimonials,
   EnhancedSlider,
-  EnhancedSquareBanners,
   NoonProductGrid,
   NoonCategoryStrip,
+  PromoBannerRail,
 } from './components/home';
 import { registerThemeHooks } from './hooks';
 
@@ -29,7 +29,10 @@ registerHomeComponents({
   // carousel of large white cards (6 per row + arrows -> ~11 visible).
   'main-links': NoonCategoryStrip,
   'square-links': NoonCategoryStrip,
-  'enhanced-square-banners': EnhancedSquareBanners,
+  // Banner sections become an auto-advancing rail with arrows and dots.
+  'enhanced-square-banners': PromoBannerRail,
+  'fixed-banner': PromoBannerRail,
+  'photos-slider': PromoBannerRail,
 
   // BUGFIX: the engine's DefaultHomeComponents only maps
   // 'featured-products:style1|style2|style3'. Stores that request the plain

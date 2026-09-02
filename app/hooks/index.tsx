@@ -3,7 +3,7 @@ import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { AddProductToast } from '../components/cart';
 import { SearchSuggestions } from '../components/search/SearchSuggestions';
 import { AnnouncementBar } from '../components/AnnouncementBar';
-import { DigitalFilesSettings } from '../components/product';
+import { DigitalFilesSettings, ProductTrustPanel } from '../components/product';
 
 // The scaffold both auto-registers on module load (bottom of this file) AND
 // has router.tsx call registerThemeHooks(). Every hook therefore registered
@@ -35,6 +35,23 @@ export function registerThemeHooks() {
   // rather than replace, so rendering our own field would leave two search
   // boxes on the page.
   hookRegistry.register(HookName.BODY_END, () => <SearchSuggestions />, 60);
+
+  // Delivery / payment / warranty panel under the buy button. Every row is
+  // derived from the product or a store-wide fact; unsubstantiated rows are
+  // simply not rendered.
+  // NOTE: HookName.PRODUCT_FORM_END exists in the enum but the engine never
+  // MOUNTS that slot - the only product slots actually rendered are
+  // product:single.description{,.start,.end}. Registering against FORM_END
+  // silently renders nothing.
+  hookRegistry.register(
+    HookName.PRODUCT_DESCRIPTION_END,
+    (context: HookContext) => {
+      const { product } = context as { product?: Product };
+      if (!product) return null;
+      return <ProductTrustPanel product={product} />;
+    },
+    50
+  );
 
   // Register DigitalFilesSettings at product:single.description hook slot
   // Receives product from ProductDetails via context prop

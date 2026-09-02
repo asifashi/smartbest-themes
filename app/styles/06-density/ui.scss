@@ -215,3 +215,172 @@
   .s-products-list-wrapper { gap: 6px !important; }
   .pstatus { font-size: 0.625rem; }
 }
+
+/* --------------------------------------------------------------------------
+   5. PROMO BANNER RAIL  (app/components/home/PromoBannerRail.tsx)
+      Native scroll-snap, so touch/trackpad/keyboard work without JS.
+   -------------------------------------------------------------------------- */
+.promo-rail__wrap { position: relative; margin-top: 16px; }
+
+.promo-rail__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.promo-rail {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-radius: 12px;
+}
+.promo-rail::-webkit-scrollbar { display: none; }
+
+.promo-rail__slide {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 3 / 1;
+  background: #f3f4f6;
+  display: block;
+}
+.promo-rail__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.promo-rail__copy {
+  position: absolute;
+  inset-inline-start: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+  max-width: 46%;
+}
+.promo-rail__h { font-size: 1.6rem; font-weight: 800; line-height: 1.15; }
+.promo-rail__s { font-size: 0.95rem; opacity: 0.95; }
+.promo-rail__cta {
+  margin-top: 4px;
+  background: #fff;
+  color: #16181d;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 999px;
+}
+
+.promo-rail__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--card-border, #eceef1);
+  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.promo-rail__arrow:hover { background: #fff; }
+.promo-rail__arrow--prev { inset-inline-start: 10px; }
+.promo-rail__arrow--next { inset-inline-end: 10px; }
+
+.promo-rail__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.promo-rail__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #d5d8dd;
+  border: 0;
+  cursor: pointer;
+  transition: width 0.2s ease, background-color 0.2s ease;
+}
+.promo-rail__dot.is-active {
+  width: 22px;
+  background: var(--color-primary, #16181d);
+}
+
+@media (max-width: 640px) {
+  .promo-rail__slide { aspect-ratio: 2 / 1; }
+  .promo-rail__h { font-size: 1.05rem; }
+  .promo-rail__s { font-size: 0.8125rem; }
+  .promo-rail__copy { max-width: 62%; }
+  .promo-rail__arrow { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   6. PRODUCT TRUST PANEL  (app/components/product/ProductTrustPanel.tsx)
+      Delivery / instalments / returns / warranty under the buy button.
+   -------------------------------------------------------------------------- */
+.ptrust {
+  margin-top: 16px;
+  border: 1px solid var(--card-border, #eceef1);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.ptrust__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 13px;
+  border-bottom: 1px solid #f2f3f5;
+}
+.ptrust__row:last-child { border-bottom: 0; }
+
+.ptrust__row > i {
+  flex: 0 0 auto;
+  font-size: 17px;
+  line-height: 1.3;
+  color: var(--card-muted, #6b7280);
+  margin-top: 1px;
+}
+
+.ptrust__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.ptrust__title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--card-ink, #16181d);
+  line-height: 1.25rem;
+}
+.ptrust__note {
+  font-size: 0.75rem;
+  color: var(--card-muted, #6b7280);
+  line-height: 1.1rem;
+}
+
+.ptrust__row--good { background: #f4fbf7; }
+.ptrust__row--good > i { color: #0f7a43; }
+
+.ptrust__row--urgent { background: #fef6f6; }
+.ptrust__row--urgent > i { color: #b3261e; }
+.ptrust__row--urgent .ptrust__title { color: #b3261e; }
+
+@media (max-width: 640px) {
+  .ptrust__row { padding: 10px 11px; }
+  .ptrust__title { font-size: 0.78rem; }
+}

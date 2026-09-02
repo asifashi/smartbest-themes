@@ -135,7 +135,12 @@
   align-items: baseline;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: auto;
+  /* `margin-top: auto` here pushed the PRICE to the bottom of the card, so
+     equal-height cards opened a ~30px hole between the title and the price.
+     The slack belongs below the price instead - the auto margin now lives on
+     the footer, which keeps the button pinned to the bottom while the price
+     stays tight under the title. */
+  margin-top: 2px;
 }
 :is(.noon-grid, .s-products-list-wrapper) .s-product-card-starting-price,
 :is(.noon-grid, .s-products-list-wrapper) .s-product-card-price {
@@ -152,7 +157,7 @@
 }
 
 /* ---- footer / add to cart ---------------------------------------------- */
-:is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-footer { margin-top: 8px; }
+:is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-footer { margin-top: auto; padding-top: 8px; }
 
 :is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-footer .s-button-element {
   width: 100%;

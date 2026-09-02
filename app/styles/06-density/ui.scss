@@ -61,8 +61,42 @@
    2. ROTATING STATUS STRIP  (app/components/home/ProductStatusBadge.tsx)
       Sits under the card as a sibling; the card itself is engine-owned.
    -------------------------------------------------------------------------- */
-.noon-card { position: relative; display: flex; flex-direction: column; }
-.noon-card > .s-product-card { flex: 1; }
+/* The status strip has to sit BETWEEN the price and the Add-to-Cart button,
+   but the engine nests them two levels deeper than the badge:
+
+     .noon-card > .s-product-card > .s-product-card-content > {main, sub, footer}
+     .noon-card > .pstatus
+
+   CSS cannot move nodes between parents, so the two wrappers are collapsed
+   with `display: contents`. Image, title, price, badge and footer then become
+   siblings of one flex column and can be ordered freely. All card chrome
+   (border, radius, background, hover) moves up to .noon-card, because an
+   element with `display: contents` paints nothing itself. */
+.noon-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--card-border, #eceef1);
+  border-radius: var(--card-radius, 10px);
+  overflow: hidden;
+  transition: box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+}
+.noon-card:hover {
+  border-color: #dfe3e8;
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.1);
+  transform: translateY(-2px);
+}
+
+.noon-card > .s-product-card { display: contents; }
+.noon-card .s-product-card-content { display: contents; }
+
+/* Order within the collapsed column */
+.noon-card .s-product-card-image         { order: 1; }
+.noon-card .s-product-card-content-main  { order: 2; padding: 8px 10px 0; }
+.noon-card .s-product-card-content-sub   { order: 3; padding: 0 10px; }
+.noon-card .pstatus                      { order: 4; margin: 6px 10px 0; }
+.noon-card .s-product-card-content-footer{ order: 5; margin-top: auto; padding: 8px 10px 10px; }
 
 .pstatus {
   margin-top: 4px;
@@ -188,11 +222,50 @@
 
 /* Phone */
 @media (max-width: 640px) {
+  /* noon shows FOUR per row on a phone, not two - small cards are the point
+     of a dense marketplace grid. Card chrome shrinks to match. */
   .noon-grid,
   .s-products-list-wrapper {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 8px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 5px !important;
   }
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-content { padding: 6px !important; }
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-title {
+    font-size: 0.6875rem;
+    line-height: 0.95rem;
+  }
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-title a { min-height: 1.9rem; }
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-starting-price,
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-price { font-size: 0.75rem; }
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-full-price { font-size: 0.625rem; }
+  /* At 4-up a card is ~92px wide and "أضف إلى السلة" truncates to "أ...".
+     noon uses an icon button at this size - so do we. The label is hidden
+     for sight but kept for screen readers via the button's aria-label. */
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-footer .s-button-element {
+    height: 30px;
+    min-width: 0;
+    padding: 0;
+    font-size: 0;
+    position: relative;
+  }
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-footer .s-button-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-content-footer .s-button-element::after {
+    content: "+";
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* Rating on its own row wastes height at this width - fold it beside price */
+  :is(.noon-grid, .s-products-list-wrapper) .s-product-card-rating { display: none; }
+  .pstatus { font-size: 0.5625rem; min-height: 18px; padding: 3px 5px; }
   .noon-cats__item { flex-basis: 76px; padding: 8px 2px; }
   .noon-cats__thumb { width: 46px; height: 46px; }
   .noon-cats__label { font-size: 0.6875rem; }

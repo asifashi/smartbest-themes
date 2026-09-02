@@ -2,9 +2,19 @@ import { hookRegistry, HookName, type HookContext } from '@salla.sa/twilight-the
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { AddProductToast } from '../components/cart';
 import { SearchSuggestions } from '../components/search/SearchSuggestions';
+import { AnnouncementBar } from '../components/AnnouncementBar';
 import { DigitalFilesSettings } from '../components/product';
 
+// The scaffold both auto-registers on module load (bottom of this file) AND
+// has router.tsx call registerThemeHooks(). Every hook therefore registered
+// TWICE, which renders each hook component twice - visible as a doubled
+// announcement ticker. Guard so repeat calls are a no-op.
+let registered = false;
+
 export function registerThemeHooks() {
+  if (registered) return;
+  registered = true;
+
   // Register AddProductToast at body:end hook slot
   // Only renders when theme.settings.enable_add_product_toast is true
   hookRegistry.register(
@@ -16,6 +26,9 @@ export function registerThemeHooks() {
     },
     50
   );
+
+  // Running promo ticker above the header (noon / Trendyol pattern).
+  hookRegistry.register(HookName.HEADER_START, () => <AnnouncementBar />, 40);
 
   // Live search suggestions. Mounted at body:end and attached to the header's
   // EXISTING search input - the header is a lazy engine component and hooks add

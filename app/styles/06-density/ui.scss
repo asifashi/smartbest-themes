@@ -1,0 +1,217 @@
+/* ==========================================================================
+   MARKETPLACE UI — ticker, rotating status strip, category rail
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ANNOUNCEMENT TICKER  (app/components/AnnouncementBar.tsx)
+      Track is duplicated and translated exactly -50%, so the loop is seamless.
+   -------------------------------------------------------------------------- */
+.announce {
+  background: var(--color-primary, #16181d);
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1;
+  overflow: hidden;
+}
+
+.announce__mask {
+  max-width: 1600px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 7px 12px;
+}
+
+.announce__track {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  width: max-content;
+  animation-name: announceScroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.announce:hover .announce__track { animation-play-state: paused; }
+
+.announce__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  opacity: 0.95;
+}
+.announce__item i { font-size: 13px; }
+.announce__link { color: inherit; text-decoration: underline; }
+
+@keyframes announceScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+[dir='rtl'] .announce__track { animation-name: announceScrollRtl; }
+@keyframes announceScrollRtl {
+  from { transform: translateX(0); }
+  to   { transform: translateX(50%); }
+}
+
+/* Motion sensitivity: stop the belt rather than moving it slower. */
+@media (prefers-reduced-motion: reduce) {
+  .announce__track { animation: none; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   2. ROTATING STATUS STRIP  (app/components/home/ProductStatusBadge.tsx)
+      Sits under the card as a sibling; the card itself is engine-owned.
+   -------------------------------------------------------------------------- */
+.noon-card { position: relative; display: flex; flex-direction: column; }
+.noon-card > .s-product-card { flex: 1; }
+
+.pstatus {
+  margin-top: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.1;
+  min-height: 22px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.pstatus__in {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  animation: pstatusIn 0.32s ease;
+}
+.pstatus i { font-size: 12px; }
+
+@keyframes pstatusIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pstatus__in { animation: none; }
+}
+
+.pstatus--ship   { background: #e8f5ee; color: #0f7a43; }
+.pstatus--urgent { background: #fdecec; color: #b3261e; }
+.pstatus--fast   { background: #eef2fb; color: #24479c; }
+.pstatus--deal   { background: #fff4e5; color: #a35c00; }
+
+/* --------------------------------------------------------------------------
+   3. CATEGORY RAIL + ARROWS  (app/components/home/NoonCategoryStrip.tsx)
+   -------------------------------------------------------------------------- */
+.noon-cats__wrap { position: relative; }
+
+.noon-cats {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+.noon-cats::-webkit-scrollbar { display: none; }
+
+.noon-cats__item {
+  flex: 0 0 104px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 4px;
+  border-radius: 8px;
+  text-align: center;
+  transition: background-color 0.18s ease;
+}
+.noon-cats__item:hover { background: #f5f6f8; }
+
+.noon-cats__thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.noon-cats__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.noon-cats__thumb i { font-size: 22px; color: var(--color-primary, #16181d); }
+
+.noon-cats__label {
+  font-size: 0.72rem;
+  line-height: 1.15;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.noon-cats__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--card-border, #eceef1);
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.noon-cats__arrow:hover { background: #f5f6f8; }
+.noon-cats__arrow[hidden] { display: none; }
+.noon-cats__arrow--prev { inset-inline-start: -6px; }
+.noon-cats__arrow--next { inset-inline-end: -6px; }
+
+/* --------------------------------------------------------------------------
+   4. RESPONSIVE — phone, tablet, desktop
+   -------------------------------------------------------------------------- */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .noon-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .s-products-list-wrapper { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; }
+  .noon-cats__item { flex-basis: 92px; }
+  .s-block--enhanced-slider .swiper-slide { max-height: 300px !important; }
+}
+
+/* Phone */
+@media (max-width: 640px) {
+  .noon-grid,
+  .s-products-list-wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .noon-cats__item { flex-basis: 76px; padding: 8px 2px; }
+  .noon-cats__thumb { width: 46px; height: 46px; }
+  .noon-cats__label { font-size: 0.6875rem; }
+  /* Arrows are redundant when the rail is swipeable */
+  .noon-cats__arrow { display: none !important; }
+
+  .s-block--enhanced-slider .swiper-slide {
+    aspect-ratio: 16 / 9 !important;
+    max-height: 220px !important;
+  }
+  .announce__mask { padding: 6px 10px; }
+  .announce { font-size: 0.6875rem; }
+  .noon-grid__deal { width: 100%; justify-content: center; }
+  .search-sugg { min-width: 0; }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .noon-grid,
+  .s-products-list-wrapper { gap: 6px !important; }
+  .pstatus { font-size: 0.625rem; }
+}

@@ -4,6 +4,7 @@ import { product, type ProductsListSource } from '@salla.sa/twilight-theme-engin
 import { ProductCard } from '@salla.sa/twilight-theme-engine/product';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { DealCountdown } from './DealCountdown';
+import { ProductStatusBadge } from './ProductStatusBadge';
 import { useDemoFallback } from '../../demo/products';
 
 /**
@@ -100,13 +101,18 @@ function GridBody({
       )}
       <div className="noon-grid">
         {items.map((p, i) => (
-          <ProductCard
-            key={p.id}
-            product={p}
-            layout="vertical"
-            withShadow={false}
-            imagePriority={i < 8}
-          />
+          // The card is engine-owned, so the rotating status strip is a
+          // sibling in a wrapper rather than a child - adding to the card
+          // without forking it and losing cart/wishlist behaviour.
+          <div className="noon-card" key={p.id}>
+            <ProductCard
+              product={p}
+              layout="vertical"
+              withShadow={false}
+              imagePriority={i < 8}
+            />
+            <ProductStatusBadge product={p} index={i} />
+          </div>
         ))}
       </div>
     </>

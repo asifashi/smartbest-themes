@@ -7,3 +7,4 @@ export { EnhancedSquareBanners } from './EnhancedSquareBanners';
 export { NoonProductGrid } from './NoonProductGrid';
 export { NoonCategoryStrip } from './NoonCategoryStrip';
 export { DealCountdown } from './DealCountdown';
+export { ProductStatusBadge } from './ProductStatusBadge';

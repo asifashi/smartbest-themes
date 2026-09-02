@@ -4,6 +4,7 @@ import { product, type ProductsListSource } from '@salla.sa/twilight-theme-engin
 import { ProductCard } from '@salla.sa/twilight-theme-engine/product';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { DealCountdown } from './DealCountdown';
+import { useDemoFallback } from '../../demo/products';
 
 /**
  * NoonProductGrid
@@ -67,7 +68,17 @@ function GridBody({
   });
 
   // PaginatedResult is { items, next } - NOT { data }
-  const items: Product[] = (data?.items ?? []).slice(0, limit);
+  // In DEV, fall back to the demo catalogue when the store is too thin to
+  // judge a dense layout (the Raed demo has ~5 items, no sales, no deadlines).
+  // useDemoFallback is a no-op in a published build.
+  const real: Product[] = data?.items ?? [];
+  const pool = useDemoFallback(real);
+  // The store's section limit (often 4) is right for a carousel but leaves a
+  // grid as one short row. When the demo pool stands in, show enough to
+  // actually fill rows; real data still honours the merchant's limit.
+  const usingDemo = pool !== real;
+  const cap = usingDemo ? Math.max(limit, 18) : limit;
+  const items: Product[] = pool.slice(0, cap);
   if (!items.length) return null;
 
   // Drive the countdown off real data: the EARLIEST offer to expire in this

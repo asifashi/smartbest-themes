@@ -28,6 +28,15 @@
   padding-left: 12px;
   padding-right: 12px;
 }
+
+/* The engine ships its OWN compiled CSS in which `.s-block` sections carry
+   max-width:1280px. That sits ABOVE our .container in the DOM, so widening
+   the container alone left the grid at 1228px inside a 1280px section.
+   Measured in the browser: section 1280 -> container 1260 -> grid 1228. */
+section.s-block,
+.s-block {
+  max-width: 1600px !important;
+}
 @media (min-width: 1600px) {
   .container { padding-left: 16px; padding-right: 16px; }
 }

@@ -1,6 +1,7 @@
 import { hookRegistry, HookName, type HookContext } from '@salla.sa/twilight-theme-engine/hooks';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { AddProductToast } from '../components/cart';
+import { SearchSuggestions } from '../components/search/SearchSuggestions';
 import { DigitalFilesSettings } from '../components/product';
 
 export function registerThemeHooks() {
@@ -15,6 +16,12 @@ export function registerThemeHooks() {
     },
     50
   );
+
+  // Live search suggestions. Mounted at body:end and attached to the header's
+  // EXISTING search input - the header is a lazy engine component and hooks add
+  // rather than replace, so rendering our own field would leave two search
+  // boxes on the page.
+  hookRegistry.register(HookName.BODY_END, () => <SearchSuggestions />, 60);
 
   // Register DigitalFilesSettings at product:single.description hook slot
   // Receives product from ProductDetails via context prop

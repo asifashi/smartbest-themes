@@ -1,0 +1,96 @@
+/* ==========================================================================
+   FILTER SIDEBAR + LISTING TOOLBAR
+   --------------------------------------------------------------------------
+   The engine already renders filters (categories, brands, colour, price) and
+   a sort control on listing pages - they were present but styled as plain
+   stacked boxes. This gives them the same premium treatment as the cards.
+   Selectors read off the rendered category page:
+     .s-filters-widget-container > -title / -content / -values
+   ========================================================================== */
+
+.s-filters-widget-container {
+  background: #fff;
+  border: 1px solid var(--card-border, #eceef1);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+.s-filters-widget-title {
+  font-size: 0.875rem !important;
+  font-weight: 700;
+  color: var(--card-ink, #16181d);
+  margin-bottom: 2px;
+}
+
+.s-filters-widget-content { padding-top: 8px; }
+
+.s-filters-widget-values {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* Each option reads as a row you can click, not a stray checkbox */
+.s-filters-widget-values label,
+.s-filters-widget-values .s-filters-widget-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.s-filters-widget-values label:hover,
+.s-filters-widget-values .s-filters-widget-value:hover {
+  background: #f5f6f8;
+}
+
+/* The count in brackets is secondary information */
+.s-filters-widget-values label span:last-child { color: var(--card-muted, #6b7280); }
+
+/* Colour swatch search box inside the colour widget */
+.s-filters-widget-content input[type='text'],
+.s-filters-widget-content input[type='search'] {
+  height: 34px;
+  font-size: 0.8125rem;
+  border-radius: 7px;
+}
+
+/* ---- toolbar above the grid (result count + sort) ---------------------- */
+.s-products-list-toolbar,
+.products-list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Sort select: a real control, not a bare form input */
+select.form-input {
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border, #eceef1);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding-inline: 12px;
+  background-color: #fff;
+}
+select.form-input:focus {
+  border-color: var(--color-primary, #16181d);
+  outline: none;
+}
+
+/* Listing grid: match the home grid's density */
+.s-products-list-wrapper {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 200px)) !important;
+  justify-content: start;
+  gap: 8px !important;
+}
